@@ -262,14 +262,3 @@ def doallstuff(path, url):
 localpath = './data/sample4.jpg'
 link = 'https://cdn.discordapp.com/attachments/368544413560864770/368564818766069760/image.jpg'
 doallstuff(localpath, '')
-
-
-def comunicatewiththinks():
-    app = Flask(__name__)
-
-    @app.route('/')
-    def hello_world():
-        return 'Hello, World!'
-
-    def get_data():
-        return requests.get('http://example.com').content
