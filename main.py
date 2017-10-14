@@ -110,9 +110,9 @@ def showResultOnImage(result, img):
             y = [tl[1], tr[1], tr[1], br[1], br[1], bl[1], bl[1], tl[1]]
             line = Line2D(x, y, linewidth=3.5, color='red')
             ax.add_line(line)
-            ax.text(tl[0], tl[1] - 2, '{:s}'.format(text),
+            ax.text((bl[0]+br[0])/2, (bl[1]+tl[1])/2, '{:s}'.format(text),
                     bbox=dict(facecolor='blue', alpha=0.5),
-                    fontsize=14, color='white')
+                    fontsize=10, color='white', ha='center', va='center')
 
     plt.axis('off')
     plt.tight_layout()
