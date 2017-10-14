@@ -125,7 +125,7 @@ def showResultOnImage(result, img):
                 t = 15
             if height > 60:
                 t = 18
-            print(t)
+
             ax.text((bl[0]+br[0])/2, (bl[1]+tl[1])/2, '{:s}'.format(text),
                     bbox=dict(facecolor='blue', alpha=0.5),
                     fontsize=t, color='white', ha='center', va='center')
@@ -139,7 +139,38 @@ def showResultOnImage(result, img):
 def writetohtml(jsondata,image):
     path = './data/' + 'bicho' + '.html'
     htmlfile = open(path, 'w')
-    begin = '<html><body> \n'
+    begin = '''
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    ;(function($) {
+    $.fn.textfill = function(options) {
+        var fontSize = options.maxFontPixels;
+        var ourText = $('span:visible:first', this);
+        var maxHeight = $(this).height();
+        var maxWidth = $(this).width();
+        var textHeight;
+        var textWidth;
+        do {
+            ourText.css('font-size', fontSize);
+            textHeight = ourText.height();
+            textWidth = ourText.width();
+            fontSize = fontSize - 1;
+        } while ((textHeight > maxHeight || textWidth > maxWidth) && fontSize > 3);
+        return this;
+    }
+})(jQuery);
+
+$(document).ready(function() {
+    $('.jtextfill').textfill({ maxFontPixels: 36 });
+});
+</script>
+</head>
+<body>
+    
+    '''
+
     end = '</body></html>'
     htmlfile.write(begin)
     for line in range(0, len(jsondata['recognitionResult']['lines'])):
@@ -153,9 +184,9 @@ def writetohtml(jsondata,image):
         #template = Template("<p position:fixed left = tl[0]>\n${text}</p>\n")
         height = bl[1] - tl[1]
         width = br[0] - bl[0]
-        template = '<div style = " position:absolute; left:' + str(tl[0]) + 'px;top:' + str(tl[1]) + 'px;width:'+str(width)+'px;height:'+str(height)+'px;font-size:'+str(height*0.65)+'px;text-align:justify; border:1px solid black">'
+        template = '<div class = "jtextfill"  style = " position:absolute; left:' + str(tl[0]) + 'px;top:' + str(tl[1]) + 'px;width:'+str(width)+'px;height:'+str(height)+';border:1px solid black">'
         endplate = '</div>'
-        htmltext = template + jsondata['recognitionResult']['lines'][line]['text'] + '\n' + endplate
+        htmltext = template + '<span>' + jsondata['recognitionResult']['lines'][line]['text'] + '</span>' + '\n' + endplate
         print(htmltext)
 
         htmlfile.write(htmltext)
@@ -176,11 +207,11 @@ def preprocessing(path):
         newheight = ratio * image.size[1]
         v = [int(newlenght),int(newheight)]
         image = image.resize(v)
-    image.save(path, "JPEG", quality=80, optimize=True, progressive=True)
+    image.save(path, "PNG", quality=80, optimize=True, progressive=True)
 
 
 # Load raw image file into memory
-pathToFileInDisk = './data/pizarra1.jpg'
+pathToFileInDisk = './data/sample2.jpg'
 preprocessing(pathToFileInDisk)
 
 with open(pathToFileInDisk, 'rb') as f:
