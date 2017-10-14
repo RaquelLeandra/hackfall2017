@@ -145,10 +145,28 @@ def writetohtml(jsondata,image):
         htmlfile.write(htmltext)
     htmlfile.write(end)
 
+maxSize = 1000
+
+def preprocessing(path):
+    image = Image.open(path)
+    if image.size[0] > image.size[1]:
+        x = image.size[0]
+    else:
+        x = image.size[1]
+
+    if x > maxSize:
+        ratio = maxSize/x
+        newlenght = image.size[0]*ratio
+        newheight = ratio * image.size[1]
+        v = [int(newlenght),int(newheight)]
+        image = image.resize(v)
+    image.save(path, "JPEG", quality=80, optimize=True, progressive=True)
 
 
 # Load raw image file into memory
-pathToFileInDisk = './data/libreta5.jpg'
+pathToFileInDisk = './data/pizarra1.jpg'
+preprocessing(pathToFileInDisk)
+
 with open(pathToFileInDisk, 'rb') as f:
     data = f.read()
 image = Image.open(pathToFileInDisk)
