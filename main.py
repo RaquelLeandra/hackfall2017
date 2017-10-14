@@ -8,6 +8,7 @@ from PIL import Image
 from string import Template
 import urllib.request as urllib
 from io import BytesIO
+from flask import Flask
 
 # Import library to display results
 import matplotlib.pyplot as plt
@@ -222,9 +223,10 @@ def preprocessing(path):
 # Load raw image file into memory
 
 def doallstuff(path, url):
-    if len(url) != 0:
+    if url != '':
         response = requests.get(url)
         img = Image.open(BytesIO(response.content))
+        path = path + 'url'
         img.save(path, "JPEG", quality=80, optimize=True, progressive=True)
 
     preprocessing(path)
@@ -261,6 +263,17 @@ def doallstuff(path, url):
         showResultOnImage(result, img)
         printData(result)
 
-localpath = './data/pizarra1.jpg'
+localpath = './data/sample4.jpg'
 link = 'https://cdn.discordapp.com/attachments/368544413560864770/368564818766069760/image.jpg'
-doallstuff(localpath, link)
+doallstuff(localpath, '')
+
+
+def comunicatewiththinks():
+    app = Flask(__name__)
+
+    @app.route('/')
+    def hello_world():
+        return 'Hello, World!'
+
+    def get_data():
+        return requests.get('http://example.com').content

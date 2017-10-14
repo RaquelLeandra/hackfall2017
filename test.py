@@ -1,9 +1,14 @@
-import json
+from flask import Flask
+from flask import Response
+import requests
+app = Flask(__name__)
 
-with open('data.txt') as data_file:
-    data = json.load(data_file)
-
-print(data['recognitionResult']['lines'][0].keys())
-
-for line in range(0,len(data['recognitionResult']['lines'])):
-    print(data['recognitionResult']['lines'][line]['text'] + '\n')
+@app.route("/")
+def proxy_example():
+    r = requests.get("http://127.0.0.1:5000/")
+    print(r.text)
+    return Response(
+        r.text,
+        status=r.status_code,
+        content_type=r.headers['content-type'],
+    )
