@@ -119,7 +119,7 @@ def showResultOnImage(result, img):
 
 
 # Load raw image file into memory
-pathToFileInDisk = './data/pizarra2.jpg'
+pathToFileInDisk = './data/pizarra3.jpeg'
 with open(pathToFileInDisk, 'rb') as f:
     data = f.read()
 
