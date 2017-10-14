@@ -1,3 +1,4 @@
+import math
 import time
 import requests
 import cv2
@@ -110,9 +111,24 @@ def showResultOnImage(result, img):
             y = [tl[1], tr[1], tr[1], br[1], br[1], bl[1], bl[1], tl[1]]
             line = Line2D(x, y, linewidth=3.5, color='red')
             ax.add_line(line)
+            t = 7
+            height = bl[1]-tl[1]
+            if height < 15:
+                t = 6
+            if height > 20:
+                t = 8
+            if height > 25:
+                t = 9
+            if height > 30:
+                t = 10
+            if height > 35:
+                t = 15
+            if height > 60:
+                t = 18
+            print(t)
             ax.text((bl[0]+br[0])/2, (bl[1]+tl[1])/2, '{:s}'.format(text),
                     bbox=dict(facecolor='blue', alpha=0.5),
-                    fontsize=10, color='white', ha='center', va='center')
+                    fontsize=t, color='white', ha='center', va='center')
 
     plt.axis('off')
     plt.tight_layout()
