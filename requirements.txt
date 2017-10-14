@@ -5,4 +5,4 @@ Pillow==4.1.1
 Flask==0.12.2
 dj-database-url
 django == 1.11.6
-gunicorn 
+gunicorn
