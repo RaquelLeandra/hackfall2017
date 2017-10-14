@@ -138,8 +138,8 @@ def showResultOnImage(result, img):
     plt.show()
 
 
-def writetohtml(jsondata,image):
-    path = './data/' + 'bicho' + '.html'
+def writetohtml(jsondata,image,path):
+    path = path[0:-4] + '.html'
     htmlfile = open(path, 'w')
     begin = '''
 <html>
@@ -257,7 +257,7 @@ def doallstuff(path, url):
     if result is not None and result['status'] == 'Succeeded':
         data8uint = np.fromstring(data, np.uint8)  # Convert string to an unsigned int array
         img = cv2.cvtColor(cv2.imdecode(data8uint, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
-        writetohtml(result,image)
+        writetohtml(result,image,path)
         showResultOnImage(result, img)
         printData(result)
 
