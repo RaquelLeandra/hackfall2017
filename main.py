@@ -148,7 +148,7 @@ def writetohtml(jsondata,image):
 
 
 # Load raw image file into memory
-pathToFileInDisk = './data/libreta2.jpg'
+pathToFileInDisk = './data/libreta5.jpg'
 with open(pathToFileInDisk, 'rb') as f:
     data = f.read()
 image = Image.open(pathToFileInDisk)
