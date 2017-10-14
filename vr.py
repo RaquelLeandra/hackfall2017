@@ -26,10 +26,10 @@ requestHeaders = {
 }
 
 # The URL of a JPEG image containing handwritten text.
-body = {'url' : 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Cursive_Writing_on_Notebook_paper.jpg/800px-Cursive_Writing_on_Notebook_paper.jpg'}
+body = {'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Cursive_Writing_on_Notebook_paper.jpg/800px-Cursive_Writing_on_Notebook_paper.jpg'}
 
 # For printed text, set "handwriting" to false.
-params = {'handwriting' : 'true'}
+params = {'handwriting': 'true'}
 
 try:
     # This operation requrires two REST API calls. One to submit the image for processing,
