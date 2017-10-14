@@ -1,12 +1,8 @@
-import math
 import time
 import requests
 import cv2
-import operator
 import numpy as np
 from PIL import Image
-from string import Template
-import urllib.request as urllib
 from io import BytesIO
 from flask import Flask
 
@@ -217,6 +213,7 @@ def preprocessing(path):
         v = [int(newlenght),int(newheight)]
         image = image.resize(v)
     image.save(path, "JPEG", quality=80, optimize=True, progressive=True)
+
 
 
 # Load raw image file into memory
