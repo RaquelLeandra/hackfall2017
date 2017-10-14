@@ -197,7 +197,6 @@ var elements = document.getElementsByClassName('jtextfill');
         template = '<div class = "jtextfill"  style = " position:absolute; left:' + str(tl[0]) + 'px;top:' + str(tl[1]) + 'px;width:'+str(width)+'px;height:'+str(height)+'">'
         endplate = '</div>'
         htmltext = template + '<span>' + jsondata['recognitionResult']['lines'][line]['text'] + '</span>' + '\n' + endplate
-        print(htmltext)
 
         htmlfile.write(htmltext)
     htmlfile.write(end)
