@@ -177,8 +177,9 @@ var elements = document.getElementsByClassName('jtextfill');
 <body>
     
     '''
-    preplate = '<div style ="border-line: 1px solid black; width=' + str(image.size[0]) + 'height= ' + str(image.size[1]) + '">'
-    end = '</div></body></html>'
+
+    preplate = '<div style ="position:absolute;left:0px;top:0px; width:' + str(image.size[0]) + 'px;height:' + str(image.size[1]) + 'px;border: 1px solid black;"></div>'
+    end = '</body></html>'
     htmlfile.write(begin + preplate)
     for line in range(0, len(jsondata['recognitionResult']['lines'])):
 
@@ -260,6 +261,6 @@ def doallstuff(path, url):
         showResultOnImage(result, img)
         printData(result)
 
-localpath = './data/roses.jpg'
-link = 'https://cdn.discordapp.com/attachments/368544413560864770/368604698418085888/image.jpg'
-doallstuff(localpath,link)
+localpath = './data/pizarra1.jpg'
+link = 'https://cdn.discordapp.com/attachments/368544413560864770/368564818766069760/image.jpg'
+doallstuff(localpath, link)
