@@ -6,6 +6,8 @@ import operator
 import numpy as np
 from PIL import Image
 from string import Template
+import urllib.request as urllib
+from io import BytesIO
 
 # Import library to display results
 import matplotlib.pyplot as plt
@@ -162,17 +164,22 @@ def writetohtml(jsondata,image):
     }
 })(jQuery);
 
+
 $(document).ready(function() {
-    $('.jtextfill').textfill({ maxFontPixels: 36 });
+var elements = document.getElementsByClassName('jtextfill');
+    for(var i = 0; i < elements.length; i++ ){
+        $(elements[i]).textfill({ maxFontPixels: 36 });
+        console.log("insi")
+     }
 });
 </script>
 </head>
 <body>
     
     '''
-
-    end = '</body></html>'
-    htmlfile.write(begin)
+    preplate = '<div style ="border-line: 1px solid black; width=' + str(image.size[0]) + 'height= ' + str(image.size[1]) + '">'
+    end = '</div></body></html>'
+    htmlfile.write(begin + preplate)
     for line in range(0, len(jsondata['recognitionResult']['lines'])):
 
         lines = jsondata['recognitionResult']['lines'][line]
@@ -184,7 +191,8 @@ $(document).ready(function() {
         #template = Template("<p position:fixed left = tl[0]>\n${text}</p>\n")
         height = bl[1] - tl[1]
         width = br[0] - bl[0]
-        template = '<div class = "jtextfill"  style = " position:absolute; left:' + str(tl[0]) + 'px;top:' + str(tl[1]) + 'px;width:'+str(width)+'px;height:'+str(height)+';border:1px solid black">'
+
+        template = '<div class = "jtextfill"  style = " position:absolute; left:' + str(tl[0]) + 'px;top:' + str(tl[1]) + 'px;width:'+str(width)+'px;height:'+str(height)+'">'
         endplate = '</div>'
         htmltext = template + '<span>' + jsondata['recognitionResult']['lines'][line]['text'] + '</span>' + '\n' + endplate
         print(htmltext)
@@ -207,42 +215,51 @@ def preprocessing(path):
         newheight = ratio * image.size[1]
         v = [int(newlenght),int(newheight)]
         image = image.resize(v)
-    image.save(path, "PNG", quality=80, optimize=True, progressive=True)
+    image.save(path, "JPEG", quality=80, optimize=True, progressive=True)
 
 
 # Load raw image file into memory
-pathToFileInDisk = './data/sample2.jpg'
-preprocessing(pathToFileInDisk)
 
-with open(pathToFileInDisk, 'rb') as f:
-    data = f.read()
-image = Image.open(pathToFileInDisk)
-# Computer Vision parameters
-params = {'handwriting': 'true'}
+def doallstuff(path, url):
+    if len(url) != 0:
+        response = requests.get(url)
+        img = Image.open(BytesIO(response.content))
+        img.save(path, "JPEG", quality=80, optimize=True, progressive=True)
 
-headers = dict()
-headers['Ocp-Apim-Subscription-Key'] = _key
-headers['Content-Type'] = 'application/octet-stream'
+    preprocessing(path)
 
-json = None
+    with open(path, 'rb') as f:
+        data = f.read()
+    image = Image.open(path)
+    # Computer Vision parameters
+    params = {'handwriting': 'true'}
 
-operationLocation = processRequest(json, data, headers, params)
-
-result = None
-if (operationLocation != None):
-    headers = {}
+    headers = dict()
     headers['Ocp-Apim-Subscription-Key'] = _key
-    while True:
-        time.sleep(1)
-        result = getOCRTextResult(operationLocation, headers)
-        if result['status'] == 'Succeeded' or result['status'] == 'Failed':
-            break
+    headers['Content-Type'] = 'application/octet-stream'
 
-# Load the original image, fetched from the URL
-if result is not None and result['status'] == 'Succeeded':
-    data8uint = np.fromstring(data, np.uint8)  # Convert string to an unsigned int array
-    img = cv2.cvtColor(cv2.imdecode(data8uint, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
-    writetohtml(result,image)
-    showResultOnImage(result, img)
-    printData(result)
+    json = None
 
+    operationLocation = processRequest(json, data, headers, params)
+
+    result = None
+    if (operationLocation != None):
+        headers = {}
+        headers['Ocp-Apim-Subscription-Key'] = _key
+        while True:
+            time.sleep(1)
+            result = getOCRTextResult(operationLocation, headers)
+            if result['status'] == 'Succeeded' or result['status'] == 'Failed':
+                break
+
+    # Load the original image, fetched from the URL
+    if result is not None and result['status'] == 'Succeeded':
+        data8uint = np.fromstring(data, np.uint8)  # Convert string to an unsigned int array
+        img = cv2.cvtColor(cv2.imdecode(data8uint, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+        writetohtml(result,image)
+        showResultOnImage(result, img)
+        printData(result)
+
+localpath = './data/roses.jpg'
+link = 'https://cdn.discordapp.com/attachments/368544413560864770/368604698418085888/image.jpg'
+doallstuff(localpath,link)
