@@ -3,6 +3,8 @@ import requests
 import cv2
 import operator
 import numpy as np
+from PIL import Image
+from string import Template
 
 # Import library to display results
 import matplotlib.pyplot as plt
@@ -118,11 +120,38 @@ def showResultOnImage(result, img):
     plt.show()
 
 
+def writetohtml(jsondata,image):
+    path = './data/' + 'bicho' + '.html'
+    htmlfile = open(path, 'w')
+    begin = '<html><body> \n'
+    end = '</body></html>'
+    htmlfile.write(begin)
+    for line in range(0, len(jsondata['recognitionResult']['lines'])):
+
+        lines = jsondata['recognitionResult']['lines'][line]
+        tl = (lines['boundingBox'][0], lines['boundingBox'][1])
+        tr = (lines['boundingBox'][2], lines['boundingBox'][3])
+        br = (lines['boundingBox'][4], lines['boundingBox'][5])
+        bl = (lines['boundingBox'][6], lines['boundingBox'][7])
+        #<div style="opacity:0.5;position:absolute;left:50px;top:-30px;width:300px;height:150px;background-color:#40B3DF"></div>
+        #template = Template("<p position:fixed left = tl[0]>\n${text}</p>\n")
+        height = bl[1] - tl[1]
+        width = br[0] - bl[0]
+        template = '<div style = " position:absolute; left:' + str(tl[0]) + 'px;top:' + str(tl[1]) + 'px;width:'+str(width)+'px;height:'+str(height)+'px;font-size:'+str(height*0.65)+'px;text-align:justify; border:1px solid black">'
+        endplate = '</div>'
+        htmltext = template + jsondata['recognitionResult']['lines'][line]['text'] + '\n' + endplate
+        print(htmltext)
+
+        htmlfile.write(htmltext)
+    htmlfile.write(end)
+
+
+
 # Load raw image file into memory
-pathToFileInDisk = './data/pizarra3.jpeg'
+pathToFileInDisk = './data/libreta2.jpg'
 with open(pathToFileInDisk, 'rb') as f:
     data = f.read()
-
+image = Image.open(pathToFileInDisk)
 # Computer Vision parameters
 params = {'handwriting': 'true'}
 
@@ -148,8 +177,7 @@ if (operationLocation != None):
 if result is not None and result['status'] == 'Succeeded':
     data8uint = np.fromstring(data, np.uint8)  # Convert string to an unsigned int array
     img = cv2.cvtColor(cv2.imdecode(data8uint, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+    writetohtml(result,image)
     showResultOnImage(result, img)
     printData(result)
-
-
 
