@@ -189,10 +189,8 @@ var elements = document.getElementsByClassName('jtextfill');
         htmlfile.write(htmltext)
     htmlfile.write(end)
 
-
-
 def preprocessing(path):
-    maxSize = 2048
+    maxSize = 1000
     image = Image.open(path)
     if image.size[0] > image.size[1]:
         x = image.size[0]
