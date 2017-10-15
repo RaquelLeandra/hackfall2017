@@ -4,7 +4,7 @@ from PIL import Image
 from io import BytesIO
 
 
-def lambda_handler(event, context):
+def readist_handler(event, context):
     return event.doallstuff(context)
 
 
@@ -197,6 +197,3 @@ if __name__ == "__main__":
 
     context = 'https://cdn.discordapp.com/attachments/368544413560864770/368564818766069760/image.jpg'
     event = Event()
-
-    with open('./bicho.html', 'w') as f:
-        f.write(lambda_handler(event, context))
