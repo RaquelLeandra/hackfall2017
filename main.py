@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from io import BytesIO
-from flask import Flask
+
 
 # Import library to display results
 import matplotlib.pyplot as plt
@@ -15,12 +15,6 @@ from matplotlib.lines import Line2D
 _url = 'https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/RecognizeText'
 _key = '0f5710b332d54cefa55e2bb9495aef8d'
 _maxNumRetries = 10
-
-
-def printData(jsonfile):
-    for line in range(0, len(jsonfile['recognitionResult']['lines'])):
-        print(jsonfile['recognitionResult']['lines'][line]['text'] + '\n')
-
 
 def processRequest(json, data, headers, params):
     """
@@ -185,8 +179,6 @@ var elements = document.getElementsByClassName('jtextfill');
         tr = (lines['boundingBox'][2], lines['boundingBox'][3])
         br = (lines['boundingBox'][4], lines['boundingBox'][5])
         bl = (lines['boundingBox'][6], lines['boundingBox'][7])
-        #<div style="opacity:0.5;position:absolute;left:50px;top:-30px;width:300px;height:150px;background-color:#40B3DF"></div>
-        #template = Template("<p position:fixed left = tl[0]>\n${text}</p>\n")
         height = bl[1] - tl[1]
         width = br[0] - bl[0]
 
@@ -197,9 +189,10 @@ var elements = document.getElementsByClassName('jtextfill');
         htmlfile.write(htmltext)
     htmlfile.write(end)
 
-maxSize = 1000
+
 
 def preprocessing(path):
+    maxSize = 2048
     image = Image.open(path)
     if image.size[0] > image.size[1]:
         x = image.size[0]
@@ -229,6 +222,7 @@ def doallstuff(path, url):
 
     with open(path, 'rb') as f:
         data = f.read()
+    print(data)
     image = Image.open(path)
     # Computer Vision parameters
     params = {'handwriting': 'true'}
@@ -257,7 +251,6 @@ def doallstuff(path, url):
         img = cv2.cvtColor(cv2.imdecode(data8uint, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
         writetohtml(result,image,path)
         showResultOnImage(result, img)
-        printData(result)
 
 localpath = './data/sample4.jpg'
 link = 'https://cdn.discordapp.com/attachments/368544413560864770/368564818766069760/image.jpg'
