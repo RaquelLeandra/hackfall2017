@@ -220,7 +220,6 @@ def doallstuff(path, url):
 
     with open(path, 'rb') as f:
         data = f.read()
-    print(data)
     image = Image.open(path)
     # Computer Vision parameters
     params = {'handwriting': 'true'}
