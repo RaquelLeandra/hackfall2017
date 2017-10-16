@@ -13,7 +13,7 @@ from matplotlib.lines import Line2D
 # Variables
 
 _url = 'https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/RecognizeText'
-_key = '0f5710b332d54cefa55e2bb9495aef8d'
+#_key = insert here your key
 _maxNumRetries = 10
 
 def processRequest(json, data, headers, params):
